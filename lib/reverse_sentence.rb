@@ -1,33 +1,30 @@
 # A method to reverse the words in a sentence, in place.
 # Time complexity: O(n) where n is the number of elems in string.
-# Space complexity: O(n)
+# Space complexity: O(1)
 def reverse_sentence(my_sentence)
   return if !my_sentence
-  return swap_order_of_words(my_sentence, split_on_space(my_sentence))
+  return unreverse_each_word(reverse_string(my_sentence))
 end
 
-def split_on_space(my_sentence)
+def unreverse_each_word(my_words)
   left = 0
-  arr = []
-  my_sentence.length.times do |i|
-    if my_sentence[i + 1] == " " || i == my_sentence.length - 1
-      right = i
-      arr << my_sentence[left..right]
-      left = right + 2
+  my_words_length = my_words.length
+  my_words_length.times do |i|
+    if my_words[i] == " " || i == my_words_length - 1
+      right = (i == (my_words_length - 1) ? i : i - 1)
+      reverse_string(my_words, right, left)
+      left = i + 1
     end
   end
-  return arr
+  return my_words
 end
 
-def swap_order_of_words(my_sentence, arr)
-  l = 0
-  arr.length.times do |i|
-    arr[-i - 1].length.times do |j|
-      my_sentence[l] = arr[-i - 1][j]
-      l += 1
-    end
-    my_sentence[l] = " " unless i == arr.length - 1
-    l += 1
+def reverse_string(my_words, right = nil, left = 0)
+  right ||= my_words.length - 1
+  ((right + 1 - left) / 2).times do |j|
+    temp = my_words[left + j]
+    my_words[left + j] = my_words[right - j]
+    my_words[right - j] = temp
   end
-  return my_sentence
+  return my_words
 end
